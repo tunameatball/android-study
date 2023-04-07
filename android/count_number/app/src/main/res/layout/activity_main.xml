@@ -6,5 +6,35 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:textSize="100sp"
+        android:textColor="@color/teal_700"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_init"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="초기화" />
+
+        <Button
+            android:id="@+id/btn_plus"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="+" />
+    </LinearLayout>
 
 </LinearLayout>
