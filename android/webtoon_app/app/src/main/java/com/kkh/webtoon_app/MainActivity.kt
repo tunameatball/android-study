@@ -4,16 +4,29 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.kkh.webtoon_app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val webView = findViewById<WebView>(R.id.web_view)
-        webView.webViewClient = WebViewClient()
-        webView.settings.javaScriptEnabled = true
+        binding.button1.setOnClickListener {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragment_container, WebViewFragment())
+                commit()
+            }
+        }
 
-        webView.loadUrl("https://www.google.com")
+        binding.button2.setOnClickListener {
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragment_container, WebViewFragment())
+                commit()
+            }
+        }
     }
 }
