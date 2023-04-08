@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.google.android.material.tabs.TabLayoutMediator
 import com.kkh.webtoon_app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,23 +16,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.button1.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragment_container, WebViewFragment())
-                commit()
-            }
-        }
+        binding.viewPager.adapter = ViewPagerAdapter(this)
 
-        binding.button2.setOnClickListener {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragment_container, WebViewFragment())
-                commit()
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            run {
+                tab.text = "position $position"
             }
-        }
+        }.attach()
     }
 
     override fun onBackPressed() {
-        val currentFragment = supportFragmentManager.fragments.first()
+        val currentFragment = supportFragmentManager.fragments[binding.viewPager.currentItem]
         if (currentFragment is WebViewFragment) {
             if (currentFragment.canGoBack()) {
                 currentFragment.goBack()
