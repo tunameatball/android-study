@@ -3,14 +3,20 @@ package com.kkh.record_app
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.kkh.record_app.databinding.ActivityMainBinding
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,33 +24,126 @@ class MainActivity : AppCompatActivity() {
         const val REQUEST_CODE_RECORD_AUDIO = 200
     }
 
+
+    enum class State {
+        RELEASE, RECORDING, PLAYING
+    }
+
     private lateinit var binding: ActivityMainBinding
+    private var recorder: MediaRecorder? = null
+    private var fileName: String = ""
+    private var state = State.RELEASE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        fileName = "${externalCacheDir?.absolutePath}/audio_record_test.3gp"
+
         binding.ivRecord.setOnClickListener {
-            when {
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.RECORD_AUDIO
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    // todo 실제로 녹음 시작
+            when (state) {
+                State.RELEASE -> {
+                    doRecord()
                 }
 
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.RECORD_AUDIO
-                ) -> {
-                    showPermissionRationalDialog()
+                State.PLAYING -> {
+
                 }
 
-                else -> {
-                    requestPermissionRecordAudio()
+                State.RECORDING -> {
+                    onRecord(false)
                 }
             }
+        }
+    }
+
+    private fun doRecord() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                onRecord(true)
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) -> {
+                showPermissionRationalDialog()
+            }
+
+            else -> {
+                requestPermissionRecordAudio()
+            }
+        }
+    }
+
+    private fun onRecord(start: Boolean) = if (start) startRecording() else stopRecording()
+
+
+    private fun startRecording() {
+        state = State.RECORDING
+
+        recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            MediaRecorder(this)
+        } else {
+            MediaRecorder()
+        }.apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setOutputFile(fileName)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+
+            try {
+                prepare()
+            } catch (e: IOException) {
+                Log.e("Recorder PrePare()", e.localizedMessage?.plus("") ?: "${e.message}")
+            }
+
+            start()
+        }
+
+        binding.ivRecord.apply {
+            setImageDrawable(
+                ContextCompat.getDrawable(
+                    this@MainActivity,
+                    R.drawable.baseline_stop_24
+                )
+            )
+            imageTintList = ColorStateList.valueOf(Color.BLACK)
+        }
+
+        binding.ivPlay.apply {
+            isEnabled = false
+            alpha = 0.3f
+        }
+    }
+
+    private fun stopRecording() {
+        recorder?.apply {
+            stop()
+            release()
+        }
+
+        recorder = null
+
+        state = State.RELEASE
+
+        binding.ivRecord.apply {
+            setImageDrawable(
+                ContextCompat.getDrawable(
+                    this@MainActivity,
+                    R.drawable.baseline_fiber_manual_record_24
+                )
+            )
+            imageTintList = ColorStateList.valueOf(Color.RED)
+        }
+
+        binding.ivPlay.apply {
+            isEnabled = true
+            alpha = 1f
         }
     }
 
@@ -99,8 +198,7 @@ class MainActivity : AppCompatActivity() {
             requestCode == REQUEST_CODE_RECORD_AUDIO && grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED
 
         if (audioRecordPermissionGrant) {
-            // todo 녹음 작업을 시작함
-
+            onRecord(true)
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
