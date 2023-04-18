@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var recorder: MediaRecorder? = null
+    private var player: MediaPlayer? = null
     private var fileName: String = ""
     private var state = State.RELEASE
 
@@ -47,12 +49,39 @@ class MainActivity : AppCompatActivity() {
                     doRecord()
                 }
 
-                State.PLAYING -> {
-
-                }
-
                 State.RECORDING -> {
                     onRecord(false)
+                }
+
+                else -> {
+                    // do nothing
+                }
+            }
+        }
+
+        binding.ivPlay.setOnClickListener {
+            when (state) {
+                State.RELEASE -> {
+                    onPlay(true)
+                }
+
+                State.PLAYING -> {
+                    onPlay(false)
+                }
+
+                else -> {
+                    // do nothing
+                }
+            }
+        }
+
+        binding.ivStop.setOnClickListener {
+            when (state) {
+                State.PLAYING -> {
+                    onPlay(false)
+                }
+                else -> {
+                    // do nothing
                 }
             }
         }
@@ -145,6 +174,38 @@ class MainActivity : AppCompatActivity() {
             isEnabled = true
             alpha = 1f
         }
+    }
+
+    private fun onPlay(start: Boolean) = if (start) startPlaying() else stopPlaying()
+
+    private fun startPlaying() {
+        state = State.PLAYING
+        player = MediaPlayer().apply {
+            setDataSource(fileName)
+            try {
+                prepare()
+                start()
+            } catch (e: IOException) {
+                Log.e("startPlaying", e.localizedMessage?.plus("") ?: "${e.message}")
+            }
+        }
+
+        player?.setOnCompletionListener {
+            stopPlaying()
+        }
+
+        binding.ivRecord.isEnabled = false
+        binding.ivRecord.alpha = 0.3f
+    }
+
+    private fun stopPlaying() {
+        state = State.RELEASE
+
+        player?.release()
+        player = null
+
+        binding.ivRecord.isEnabled = true
+        binding.ivRecord.alpha = 1f
     }
 
     private fun showPermissionRationalDialog() {
