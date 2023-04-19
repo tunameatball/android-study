@@ -15,11 +15,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/view_wave"
-        />
+        app:layout_constraintBottom_toTopOf="@id/view_wave" />
 
-    <View
+    <com.kkh.record_app.WaveformView
         android:id="@+id/view_wave"
+        android:background="#e2e2e2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,7 +36,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/baseline_play_arrow_24"
-        app:tint="@color/black"/>
+        app:tint="@color/black" />
 
     <ImageView
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +47,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/baseline_fiber_manual_record_24"
-        app:tint="@color/red"/>
+        app:tint="@color/red" />
 
     <ImageView
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,6 +58,6 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/baseline_stop_24"
-        app:tint="@color/black"/>
+        app:tint="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

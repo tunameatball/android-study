@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat
 import com.kkh.record_app.databinding.ActivityMainBinding
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnTimerTickListener {
 
     companion object {
         const val REQUEST_CODE_RECORD_AUDIO = 200
@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private var player: MediaPlayer? = null
     private var fileName: String = ""
     private var state = State.RELEASE
+    private lateinit var timer: Timer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         fileName = "${externalCacheDir?.absolutePath}/audio_record_test.3gp"
+        timer = Timer(this)
 
         binding.ivRecord.setOnClickListener {
             when (state) {
@@ -134,6 +136,9 @@ class MainActivity : AppCompatActivity() {
             start()
         }
 
+        binding.viewWave.clearData()
+        timer.start()
+
         binding.ivRecord.apply {
             setImageDrawable(
                 ContextCompat.getDrawable(
@@ -157,6 +162,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         recorder = null
+
+        timer.stop()
 
         state = State.RELEASE
 
@@ -190,6 +197,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.viewWave.clearWave()
+        timer.start()
+
         player?.setOnCompletionListener {
             stopPlaying()
         }
@@ -203,6 +213,8 @@ class MainActivity : AppCompatActivity() {
 
         player?.release()
         player = null
+
+        timer.stop()
 
         binding.ivRecord.isEnabled = true
         binding.ivRecord.alpha = 1f
@@ -272,5 +284,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onTick(duration: Long) {
+        val millisecond = duration % 1000
+        val second = (duration / 1000) % 60
+        val minute = (duration / 1000 / 60)
+
+        binding.tvTimer.text = String.format("%02d:%02d.%d", minute, second, millisecond / 100)
+
+        if (state == State.PLAYING) {
+            binding.viewWave.replayAmplitude()
+        } else if (state == State.RECORDING) {
+            binding.viewWave.addAmplitude(recorder?.maxAmplitude?.toFloat() ?: 0f)
+        }
     }
 }
