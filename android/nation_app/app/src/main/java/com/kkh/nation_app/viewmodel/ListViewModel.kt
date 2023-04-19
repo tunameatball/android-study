@@ -2,6 +2,7 @@ package com.kkh.nation_app.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kkh.nation_app.model.Country
 import com.kkh.nation_app.model.service.CountriesService
 import kotlinx.coroutines.*
@@ -23,19 +24,34 @@ class ListViewModel : ViewModel() {
         fetchCountries()
     }
 
+//    private fun fetchCountries() {
+//        loading.value = true
+//
+//        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+//            val response = countriesService.getCountries()
+//            withContext(Dispatchers.Main) {
+//                if (response.isSuccessful) {
+//                    countries.value = response.body()
+//                    countryLoadError.value = ""
+//                    loading.value = false
+//                } else {
+//                    onError("Error : ${response.message()}")
+//                }
+//            }
+//        }
+//    }
+
     private fun fetchCountries() {
         loading.value = true
 
-        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+        job = viewModelScope.launch {
             val response = countriesService.getCountries()
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    countries.value = response.body()
-                    countryLoadError.value = ""
-                    loading.value = false
-                } else {
-                    onError("Error : ${response.message()}")
-                }
+            if (response.isSuccessful) {
+                countries.value = response.body()
+                countryLoadError.value = ""
+                loading.value = false
+            } else {
+                onError("Error : ${response.message()}")
             }
         }
     }
