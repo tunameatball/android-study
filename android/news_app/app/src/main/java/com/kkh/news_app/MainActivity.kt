@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kkh.news_app.databinding.ActivityMainBinding
 import com.tickaroo.tikxml.TikXml
@@ -125,6 +126,8 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
                 val list = response.body()?.channel?.items.orEmpty().transform()
                 adapter.submitList(list)
+
+                binding.notFound.isVisible = list.isEmpty()
 
                 list.forEachIndexed { index, news ->
                     Thread {
