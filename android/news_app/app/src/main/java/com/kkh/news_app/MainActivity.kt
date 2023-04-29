@@ -1,6 +1,7 @@
 package com.kkh.news_app
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -41,7 +42,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = NewsAdapter()
+        adapter = NewsAdapter {
+            startActivity(
+                Intent(this, WebViewActivity::class.java).apply {
+                    putExtra("url", it)
+                }
+            )
+
+        }
+
         binding.rvNews.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@MainActivity.adapter
