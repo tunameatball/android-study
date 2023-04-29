@@ -1,8 +1,7 @@
 package com.kkh.news_app
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kkh.news_app.databinding.ActivityMainBinding
 import com.tickaroo.tikxml.TikXml
@@ -23,27 +22,78 @@ class MainActivity : AppCompatActivity() {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
-        .addConverterFactory(TikXmlConverterFactory.create(
-            TikXml.Builder()
-                .exceptionOnUnreadXml(false)
-                .build()
-        )).build()
+        .addConverterFactory(
+            TikXmlConverterFactory.create(
+                TikXml.Builder()
+                    .exceptionOnUnreadXml(false)
+                    .build()
+            )
+        ).build()
+
+
+    private val newsService = retrofit.create(NewsService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         adapter = NewsAdapter()
         binding.rvNews.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@MainActivity.adapter
 
         }
-        val newsService = retrofit.create(NewsService::class.java)
-        newsService.mainFeed().enqueue(object: Callback<NewsRss> {
-            override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
-                Log.e("MainActivity", "${response.body()?.channel?.items}")
 
+
+        binding.chipFeed.setOnClickListener {
+            binding.chipGroupInScrollView.clearCheck()
+            binding.chipFeed.isChecked = true
+
+            newsService.mainFeed().submitList()
+        }
+
+        binding.chipPolitics.setOnClickListener {
+            binding.chipGroupInScrollView.clearCheck()
+            binding.chipPolitics.isChecked = true
+
+            newsService.politicsNews().submitList()
+        }
+
+        binding.chipEconomy.setOnClickListener {
+            binding.chipGroupInScrollView.clearCheck()
+            binding.chipEconomy.isChecked = true
+
+            newsService.economyNews().submitList()
+        }
+
+        binding.chipSocial.setOnClickListener {
+            binding.chipGroupInScrollView.clearCheck()
+            binding.chipSocial.isChecked = true
+
+            newsService.socialNews().submitList()
+        }
+
+        binding.chipIt.setOnClickListener {
+            binding.chipGroupInScrollView.clearCheck()
+            binding.chipIt.isChecked = true
+
+            newsService.itNews().submitList()
+        }
+
+        binding.chipSports.setOnClickListener {
+            binding.chipGroupInScrollView.clearCheck()
+            binding.chipSports.isChecked = true
+
+            newsService.sportsNews().submitList()
+        }
+
+        binding.chipFeed.performClick()
+    }
+
+    private fun Call<NewsRss>.submitList() {
+        enqueue(object : Callback<NewsRss> {
+            override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
                 val list = response.body()?.channel?.items.orEmpty().transform()
                 adapter.submitList(list)
 
