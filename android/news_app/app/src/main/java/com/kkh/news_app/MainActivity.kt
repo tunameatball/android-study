@@ -1,6 +1,9 @@
 package com.kkh.news_app
 
+import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kkh.news_app.databinding.ActivityMainBinding
@@ -45,7 +48,6 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-
         binding.chipFeed.setOnClickListener {
             binding.chipGroupInScrollView.clearCheck()
             binding.chipFeed.isChecked = true
@@ -86,6 +88,24 @@ class MainActivity : AppCompatActivity() {
             binding.chipSports.isChecked = true
 
             newsService.sportsNews().submitList()
+        }
+
+        binding.edtSearch.setOnEditorActionListener { view, action, event ->
+            if (action == EditorInfo.IME_ACTION_SEARCH) {
+                binding.chipGroupInScrollView.clearCheck()
+
+                binding.edtSearch.clearFocus()
+
+                // 키보드 내리기
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+
+                newsService.search(binding.edtSearch.text.toString()).submitList()
+
+                return@setOnEditorActionListener true
+            } else {
+                return@setOnEditorActionListener false
+            }
         }
 
         binding.chipFeed.performClick()
