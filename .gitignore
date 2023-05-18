@@ -83,3 +83,14 @@
 */lint/outputs/
 */lint/tmp/
 # lint/reports/
+
+*/.DS_Store
+.DS_Store
+vcs.xml
+git_toolbox_prj.xml
+saveactions_settings.xml
+android/*/.idea/gradle.xml
+android/*/.idea/compiler.xml
+android/*/.idea/kotlinc.xml
+android/*/.idea/misc.xml
+deploymentTargetDropDown.xml
