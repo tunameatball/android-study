@@ -3,6 +3,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def native_app_key = properties.getProperty('native_app_key')
+
 android {
     namespace 'com.kkh.share_location'
     compileSdk 33
@@ -15,6 +19,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [native_app_key: native_app_key]
+
+        buildConfigField("String", "NATIVE_APP_KEY", '"' + native_app_key + '"')
     }
 
     buildTypes {
@@ -32,6 +40,9 @@ android {
     }
     viewBinding {
         enabled = true
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
