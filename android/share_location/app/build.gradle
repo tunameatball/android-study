@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
 }
 
 Properties properties = new Properties()
@@ -57,4 +58,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation "com.kakao.sdk:v2-user:2.13.0" // 카카오 로그인
+    implementation platform('com.google.firebase:firebase-bom:32.1.0') // firebase
 }
