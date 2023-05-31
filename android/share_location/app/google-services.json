@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "317700434071",
+    "project_id": "share-location-5e532",
+    "storage_bucket": "share-location-5e532.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317700434071:android:c5130ce62ea4eb800361d2",
+        "android_client_info": {
+          "package_name": "com.kkh.share_location"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoDxKLhkWrNxex2JCZOEOV4ZuvdO65s4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
