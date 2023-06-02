@@ -2,11 +2,13 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def native_app_key = properties.getProperty('native_app_key')
+def google_map_key = properties.getProperty('google_map_key')
 
 android {
     namespace 'com.kkh.share_location'

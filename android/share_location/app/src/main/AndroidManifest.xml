@@ -16,6 +16,10 @@
         android:theme="@style/Theme.Share_location"
         android:name=".MyApplication"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${google_map_key}" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
