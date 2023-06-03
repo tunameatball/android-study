@@ -60,7 +60,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation "com.kakao.sdk:v2-user:2.13.0" // 카카오 로그인
-    implementation platform('com.google.firebase:firebase-bom:32.1.0') // firebase
+
+    // firebase
+    implementation platform('com.google.firebase:firebase-bom:32.1.0')
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
 
     implementation 'com.google.android.gms:play-services-maps:18.1.0' // google map
 }
