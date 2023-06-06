@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
@@ -19,6 +21,9 @@ import com.kkh.share_location.databinding.ActivityLoginBinding
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var emailLoginResult: ActivityResultLauncher<Intent>
+    private lateinit var pendingUser: User
+
 
     private val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -42,6 +47,20 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        emailLoginResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == RESULT_OK) {
+                    val email = it.data?.getStringExtra("email")
+
+                    if (email == null) {
+                        showErrorToast()
+                        return@registerForActivityResult
+                    } else {
+                        signInFirebase(pendingUser, email)
+                    }
+                }
+            }
 
         binding.btnLogin.setOnClickListener {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
@@ -96,6 +115,10 @@ class LoginActivity : AppCompatActivity() {
 
         if (kakaoEmail.isEmpty()) {
             // 추가로 이메일을 받는 작업
+            pendingUser = user
+
+            emailLoginResult.launch(Intent(this, EmailLoginActivity::class.java))
+
             return
         }
 
