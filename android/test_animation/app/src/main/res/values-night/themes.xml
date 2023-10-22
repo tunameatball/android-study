@@ -3,5 +3,11 @@
     <style name="Base.Theme.Test_animation" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="android:windowEnterAnimation">@transition/default_fade</item>
+        <item name="android:windowExitAnimation">@transition/default_fade</item>
+
+        <item name="android:windowSharedElementEnterTransition">@transition/change_image_transition</item>
+        <item name="android:windowSharedElementExitTransition">@transition/change_image_transition</item>
     </style>
 </resources>

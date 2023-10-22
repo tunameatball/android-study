@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.kkh.test_animation'
+    namespace 'com.kkh.webview_test'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.kkh.test_animation"
+        applicationId "com.kkh.webview_test"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -29,9 +29,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-    buildFeatures {
-        viewBinding = true
     }
 }
 
