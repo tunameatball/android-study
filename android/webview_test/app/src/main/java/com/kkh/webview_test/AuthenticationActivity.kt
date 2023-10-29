@@ -32,9 +32,9 @@ class AuthenticationActivity : AppCompatActivity() {
         // 패키지가 설치되어 있는 경우 Chrome을 사용하고, 그렇지 않으면 기본 웹 브라우저를 사용합니다.
         val packageName: String? = customTabsIntent.intent.`package`
 
-        if (packageName == null || !packageName.equals(CHROME_PACKAGE_NAME)) {
-            customTabsIntent.intent.setPackage(CHROME_PACKAGE_NAME)
-        }
+//        if (packageName == null || !packageName.equals(CHROME_PACKAGE_NAME)) {
+//            customTabsIntent.intent.setPackage(CHROME_PACKAGE_NAME)
+//        }
 
         customTabsIntent.launchUrl(this@AuthenticationActivity, Uri.parse("https://auth-sia.aioncloud.com:50443/login?connector_url=aisase-connector://auth"))
     }
