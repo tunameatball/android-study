@@ -13,7 +13,6 @@ fun main() {
         while (true) {
             val socket = server.accept()
 
-
             val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
             val printer = PrintWriter(socket.getOutputStream())
 
@@ -30,6 +29,8 @@ fun main() {
             printer.println("<h1>Hello World</h1>")
             printer.println("\r\n")
             printer.flush()
+
+            reader.close()
             printer.close()
 
             socket.close()
