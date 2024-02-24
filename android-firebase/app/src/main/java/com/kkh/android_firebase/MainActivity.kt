@@ -36,6 +36,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     key("name", "kwanghee")
                     key("test", true)
                 }
+
+                crash.setCustomKeys {
+                    key("name", "Kim Kwang Hee")
+                    key("test", false)
+                    key("New Test", true)
+                }
+                
                 throw Exception("Test Crash~~")
             }
         }
