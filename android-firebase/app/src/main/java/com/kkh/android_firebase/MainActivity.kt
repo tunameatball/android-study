@@ -2,6 +2,8 @@ package com.kkh.android_firebase
 
 import android.os.Bundle
 import android.view.View
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.crashlytics.setCustomKeys
 import com.kkh.android_firebase.base.BaseActivity
 import com.kkh.android_firebase.databinding.ActivityMainBinding
 
@@ -27,6 +29,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_crash -> {
+                val crash = FirebaseCrashlytics.getInstance()
+                crash.log("TEST CRASH 01")
+
+                crash.setCustomKeys {
+                    key("name", "kwanghee")
+                    key("test", true)
+                }
                 throw Exception("Test Crash~~")
             }
         }
