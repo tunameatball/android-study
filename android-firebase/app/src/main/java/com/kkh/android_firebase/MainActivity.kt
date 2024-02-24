@@ -1,7 +1,11 @@
 package com.kkh.android_firebase
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.setCustomKeys
 import com.kkh.android_firebase.base.BaseActivity
@@ -18,11 +22,23 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         setClickListener()
+
+        sendAnalyticsLog()
+    }
+
+    private fun sendAnalyticsLog() {
+        val analytics = FirebaseAnalytics.getInstance(this)
+        analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, "Main Activity!")
+        }
+        Log.d("sendAnalyticsLog", "Send!")
     }
 
     private fun setClickListener() {
         if (::binding.isInitialized) {
             binding.btnCrash.setOnClickListener(this)
+            binding.btnAnalytics.setOnClickListener(this)
+            binding.btnNonFatalError.setOnClickListener(this)
         }
     }
 
@@ -42,8 +58,24 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     key("test", false)
                     key("New Test", true)
                 }
-                
-                throw Exception("Test Crash~~")
+
+//                throw Exception("Test Crash~~")
+                throw RuntimeException("Test Runtime Crash")
+            }
+
+            R.id.btn_analytics -> {
+                sendAnalyticsLog()
+                Toast.makeText(this, "Send Log", Toast.LENGTH_SHORT).show()
+            }
+
+            R.id.btn_non_fatal_error -> {
+                val crash = FirebaseCrashlytics.getInstance()
+                try {
+                    throw RuntimeException("This is Non Fatal Error")
+                } catch (e: Exception) {
+                    crash.recordException(e)
+                    Toast.makeText(this, "Non Fatal Error", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

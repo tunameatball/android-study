@@ -16,4 +16,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/btn_non_fatal_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Non-fatal error"
+        app:layout_constraintBottom_toTopOf="@id/btn_crash"
+        app:layout_constraintStart_toStartOf="@id/btn_crash"
+        app:layout_constraintEnd_toEndOf="@id/btn_crash" />
+
+    <Button
+        android:id="@+id/btn_analytics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Analytics"
+        app:layout_constraintTop_toBottomOf="@id/btn_crash"
+        app:layout_constraintStart_toStartOf="@id/btn_crash"
+        app:layout_constraintEnd_toEndOf="@id/btn_crash" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
